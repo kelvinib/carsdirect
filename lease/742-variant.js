@@ -139,9 +139,15 @@ window.addEventListener('urlchange', () => {
                                 <p>Complete this form to see top local offers based on current pricing analysis — no credit checks, no hassle.</p>
                             </div>    
                         `);
-                        document.getElementsByClassName('footnote')[0].innerHTML = `
+                        const footnotes = document.getElementsByClassName('footnote');
+                        footnotes[0].innerHTML = `
                             By submitting this form, you agree to our <a href="https://www.internetbrands.com/ibterms/" target="_blank">Terms of Use</a> (including the <a href="https://www.internetbrands.com/ibterms/supplementalcarrelatedterms/" target="_blank">Supplemental Terms</a>) and <a href="https://www.internetbrands.com/privacy/privacy-main" target="_blank">Privacy Policy</a>.
                         `;
+                        if (footnotes.length > 1) {
+                            for (let i = 1; i < footnotes.length; i++) {
+                                footnotes[i].style.display = 'none';
+                            }
+                        }
                         document.getElementById('firstName').setAttribute('placeholder', '');
                         document.getElementById('lastName').setAttribute('placeholder', '');
                         document.getElementById('emailInput').setAttribute('placeholder', '');
@@ -247,19 +253,28 @@ function applyLanderChanges() {
         }
     });
 }
-function waitForElem(selector) {
-    return new Promise(resolve => {
-        if (document.querySelectorAll(selector).length) {
-            return resolve(document.querySelectorAll(selector));
+function waitForElem(selector, timeout = 10000) {
+    return new Promise((resolve, reject) => {
+        const elements = document.querySelectorAll(selector);
+        if (elements.length) {
+            return resolve(elements);
         }
+
         const observer = new MutationObserver(mutations => {
-            if (document.querySelectorAll(selector).length) {
+            const elements = document.querySelectorAll(selector);
+            if (elements.length) {
                 observer.disconnect();
-                resolve(document.querySelectorAll(selector));
+                resolve(elements);
             }
         });
-        observer.observe(document.body, {childList: true, subtree: true});
-    });
+
+        observer.observe(document.body, { childList: true, subtree: true });
+
+        setTimeout(() => {
+            observer.disconnect();
+            reject(new Error(`Timeout for waitForElem: ${selector} not found within ${timeout}ms`));
+        }, timeout);
+    }).catch(e => console.error(e));
 }
 function croHandler() {
     redirectWithParams();

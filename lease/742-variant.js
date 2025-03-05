@@ -277,23 +277,8 @@ function waitForElem(selector, timeout = 10000) {
     }).catch(e => console.error(e));
 }
 function croHandler() {
-    redirectWithParams();
-}
-function redirectWithParams() {
-    try {
-        if (!window.location.search.includes('version=variant')) {
-            if (window.location.search === '') {
-                convert.redirect(window.location.href + '?version=variant');
-            } else {
-                convert.redirect(window.location.href + '&version=variant');
-            }
-        } else {
-            console.log('CRO: 742 active - redirected');
-            croSetup();
-        }
-    } catch (error) {
-        console.error('Error in CRO - redirectWithParams:', error);
-    }
+    console.log('CRO: 742 active');
+    croSetup();
 }
 if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', croHandler);

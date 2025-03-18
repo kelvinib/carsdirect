@@ -125,12 +125,16 @@ window.addEventListener('urlchange', () => {
             _conv_q.push(["triggerConversion", "100439752"]);
             setTimeout(() => {
                 waitForElem('.formWrapper form .fieldRow.ctaRow button').then((el) => {
-                    replaceCarHeadline(document.getElementsByClassName('nuxtContainer step2Wrapper')[0].getElementsByTagName('h1')[0]);
-                    if (window.innerWidth > 768) {
-                        const pictureSource = document.getElementsByClassName('photoContainer')[0].getElementsByTagName('source')[0];
-                        const pictureSourceOrigin = pictureSource.getAttribute('srcset');
-                        const imgStrChunk = pictureSourceOrigin.substring(pictureSourceOrigin.indexOf('IMG'));
-                        pictureSource.setAttribute('srcset', '//cdcssl.ibsrv.net/autodata/images/?' + imgStrChunk + '&width=700&' + new Date().getTime());
+                    try {
+                        replaceCarHeadline(document.getElementsByClassName('nuxtContainer step2Wrapper')[0].getElementsByTagName('h1')[0]);
+                        if (window.innerWidth > 768) {
+                            const pictureSource = document.getElementsByClassName('photoContainer')[0].getElementsByTagName('source')[0];
+                            const pictureSourceOrigin = pictureSource.getAttribute('srcset');
+                            const imgStrChunk = pictureSourceOrigin.substring(pictureSourceOrigin.indexOf('IMG'));
+                            pictureSource.setAttribute('srcset', '//cdcssl.ibsrv.net/autodata/images/?' + imgStrChunk + '&width=700&' + new Date().getTime());
+                        }
+                    } catch (error) {
+                        console.error('Error in CRO - step 3 changes:', error);
                     }
                 });
             }, 300);

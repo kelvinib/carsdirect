@@ -38,14 +38,18 @@ window.addEventListener('urlchange', () => {
             _conv_q.push(["triggerConversion", "100439753"]);
             setTimeout(() => {
                 waitForElem('.formWrapper form .fieldRow.ctaRow button').then((el) => {
-                    const footnotes = document.getElementsByClassName('footnote');
-                    footnotes[0].innerHTML = `
-                        By submitting this form, you agree to our <a href="https://www.internetbrands.com/ibterms/" target="_blank">Terms of Use</a> (including the <a href="https://www.internetbrands.com/ibterms/supplementalcarrelatedterms/" target="_blank">Supplemental Terms</a>) and <a href="https://www.internetbrands.com/privacy/privacy-main" target="_blank">Privacy Policy</a>.
-                    `;
-                    if (footnotes.length > 1) {
-                        for (let i = 1; i < footnotes.length; i++) {
-                            footnotes[i].style.display = 'none';
+                    try {
+                        const footnotes = document.getElementsByClassName('footnote');
+                        footnotes[0].innerHTML = `
+                            By submitting this form, you agree to our <a href="https://www.internetbrands.com/ibterms/" target="_blank">Terms of Use</a> (including the <a href="https://www.internetbrands.com/ibterms/supplementalcarrelatedterms/" target="_blank">Supplemental Terms</a>) and <a href="https://www.internetbrands.com/privacy/privacy-main" target="_blank">Privacy Policy</a>.
+                        `;
+                        if (footnotes.length > 1) {
+                            for (let i = 1; i < footnotes.length; i++) {
+                                footnotes[i].style.display = 'none';
+                            }
                         }
+                    } catch (error) {
+                        console.error('Error in CRO - step 4 changes:', error);
                     }
                 });
             }, 300);
@@ -68,8 +72,12 @@ function croSetup() {
         console.log(currentStep.message);
     } else {
         waitForElem('.formWrapper form .fieldRow.ctaRow button').then(() => {
-            console.log('CRO: loaded 750 lander');
-            croState.passedLander = true;
+            try {
+                console.log('CRO: loaded 750 lander');
+                croState.passedLander = true;
+            } catch (error) {
+                console.error('Error in CRO - step 1 changes:', error);
+            }
         });
     }
 }
